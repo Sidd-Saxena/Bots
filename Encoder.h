@@ -2,17 +2,18 @@
 #define MBED_ENCODER_H
  
 #include "mbed.h"
-#include "m3pi.h"
 
 class Encoder {
 public:
-    Encoder(PinName pin);
-    void forward(int,float);
+    Encoder(PinName pina, PinName pinb);
+    void forward(int);
     void startEncoding();
     void stopBot();
     float read();
 private:  
-    AnalogIn _pin;
+    DigitalIn _pina;
+    DigitalIn _pinb
+    
     int encoderCount;
 };
  
