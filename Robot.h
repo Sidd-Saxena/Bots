@@ -3,8 +3,6 @@
 
 #include <vector>
 #include "Encoder.h"
-#include "m3pi.h"
-//#include "ir.h"
 #include "Servo.h"
 #include "imu.h"
 #include "LidarLite.h"
@@ -32,7 +30,7 @@ public:
     float range(void);
     bool encoderLeft(void);
     bool encoderRight(void);
-    float forward(int, float);
+    float forward(int);
     float backward(int, float);
     void right(float);
     void left(float);
@@ -40,8 +38,6 @@ public:
     DataSample scan(void);
     void sendData(void);
     void setLEDs(bool, bool, bool, bool);
-    // Object for interfacing with the robot base
-    //m3pi brain;
     // Xbee for communication
     XBee xbee;
     
@@ -52,7 +48,7 @@ private:
     Servo _servo;
     IMU _imu;
     LidarLite _lidar;
-    Motor _motor1,_motor2;
+    Motor _motor;
     DigitalOut _led1, _led2, _led3, _led4;
 };
 
