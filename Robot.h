@@ -52,7 +52,7 @@ private:
     Servo _servo;
     IMU _imu;
     LidarLite _lidar;
-    
+    Motor _motor1,_motor2;
     DigitalOut _led1, _led2, _led3, _led4;
 };
 
