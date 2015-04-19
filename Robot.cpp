@@ -10,12 +10,12 @@ Robot::Robot() :
     _y(0.0), 
     _th(0.0), 
     _range(0.0), 
-    _encoder_left(p21), 
-    _encoder_right(p22), 
+    _encoder_left(p21,p22), 
+    _encoder_right(p23,p24), 
     _lidar(p9,p10), 
-	_motor1(p6,p5),//forward,backward
-	_motor2(p7,p8),
-    _servo(p24), 
+	_motor(p6,p5,p7,p8),//forward1,backward1,forward2,backward2
+	//_motor2(p7,p8),
+    _servo(p25), 
     _imu(p28, p27, 500), 
     _led1(LED1), 
     _led2(LED2), 
@@ -159,9 +159,9 @@ float Robot::range(void)
 //}
 
 /* Moves the robot forward the specified distance. */
-float Robot::forward(int dist, float speed)
+float Robot::forward(int dist)
 {
-   _encoder_right.forward(dist,speed);
+   _encoder_right.forward(dist);
 // Update the robot's x and y coordinates
     _x += cos(_th) * dist;
     _y += sin(_th) * dist;  
