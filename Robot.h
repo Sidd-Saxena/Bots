@@ -6,6 +6,7 @@
 #include "Servo.h"
 #include "imu.h"
 #include "LidarLite.h"
+#include "Motor.h"
 #include "XBee.h"
 
 // Data sample object for holding IR/servo scans
