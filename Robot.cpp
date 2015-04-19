@@ -10,9 +10,11 @@ Robot::Robot() :
     _y(0.0), 
     _th(0.0), 
     _range(0.0), 
-    _encoder_left(p20), 
-    _encoder_right(p19), 
+    _encoder_left(p21), 
+    _encoder_right(p22), 
     _lidar(p9,p10), 
+	_motor1(p6,p5),//forward,backward
+	_motor2(p7,p8),
     _servo(p24), 
     _imu(p28, p27, 500), 
     _led1(LED1), 
@@ -218,7 +220,7 @@ DataSample Robot::scan(void)
 }
 
 //send the Current Co ordinates over ZigBee
-void Robot::sendData(void)
+void Robot::sendData(void) 
 {
     xbee.sendData("Move");
 }
