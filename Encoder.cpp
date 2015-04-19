@@ -1,13 +1,16 @@
 #include "Encoder.h"
- 
-Encoder::Encoder(PinName pin) : _pin(pin) {
+#include "Motor.h"
+
+Encoder::Encoder(PinName pina,PinName pinb){
 //    _pin = 1;
 }
  
-void Encoder::forward(int lidarReading, float botSpeed) {
-    m3pi m3pi;
-    encoderCount = (int)((float)lidarReading*0.43);
-    m3pi.forward(botSpeed);
+
+void Encoder::forward(int lidarReading) {
+    //circumference of wheel  = 13.188cm
+    //one encoder count = 2.638cm
+    encoderCount = (int)((float)lidarReading/2.638);
+    Motor.forward();
     printf("Count = %d\n\r",encoderCount);
     startEncoding();
     return;
@@ -15,25 +18,22 @@ void Encoder::forward(int lidarReading, float botSpeed) {
 
 void Encoder::startEncoding(){
     Serial pc(USBTX, USBRX); //Initalise PC serial comms
-    m3pi m3pi;
-    float current = 0, previous = 0;
+    int currenta = 0, currentb = 0 ,previous = 0;
     while(encoderCount>0){
-           current = _pin.read();
-            if((current - previous > 0.30) || (current - previous < -0.30))
-                encoderCount--;
-                printf("Count in encoding = %d\n\r",encoderCount);
-                fflush(stdout);
-            previous = current;
-
+           currenta = _pina.read();
+           currenta = _pinb.read();
+            if(a==1 && b==1)
+            {
+                 encoderCount--;
+                 printf("Count in encoding = %d\n\r",encoderCount);
+            } 
     }
-    m3pi.stop();
+    Motor.brake();
     pc.printf("Stopping bot");
     return;
 }
 
 
 float Encoder::read(){
-    return(_pin.read());   
+    return(_pina.read() , _pinb.read());   
 }
-
-
