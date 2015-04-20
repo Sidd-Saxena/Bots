@@ -6,8 +6,8 @@
 #include "Servo.h"
 #include "imu.h"
 #include "LidarLite.h"
-#include "Motor.h"
 #include "XBee.h"
+#include "Wheels_519.h"
 
 // Data sample object for holding IR/servo scans
 struct DataSample
@@ -45,11 +45,11 @@ public:
 private:
     void calibrationAlert(void);
     float _x, _y, _th, _range;
-    Encoder _encoder_left, _encoder_right;
+    Encoder _encoder_left;
     Servo _servo;
     IMU _imu;
     LidarLite _lidar;
-    Motor _motor;
+    Wheels _wheels; 
     DigitalOut _led1, _led2, _led3, _led4;
 };
 
