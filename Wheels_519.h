@@ -1,12 +1,12 @@
-#ifndef MOTOR_H
-#define MOTOR_H
+#ifndef WHEELS_519_H
+#define WHEELS_519_H
  
 #include "mbed.h"
 
 
-class Motor {
+class Wheels {
 public:
-    Motor::Motor(PinName pinf1, PinName pinr1,PinName pinf2, PinName pinr2)
+    Wheels(PinName pinf1, PinName pinr1,PinName pinf2, PinName pinr2);
     void forward();
     void backward();
     void right();
