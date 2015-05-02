@@ -4,16 +4,15 @@
 //const float ENCODER_DISTANCE = 2.35;
 
 Robot::Robot() : 
-    //brain(p23, p13, p14), 
     xbee(p13, p14,p12), 
     _x(0.0), 
     _y(0.0), 
     _th(0.0), 
     _range(0.0), 
-    _encoder_left(p23,p22), 
+    _encoder_left(p19,p20), 
     _lidar(p9,p10), 
-    _wheels(p6,p5,p7,p8),//forward1,backward1,forward2,backward2
-    _servo(p25), 
+    _botmotor(p6,p5,p21,p7,p8,p22),
+    _servo(p23), 
     _imu(p28, p27, 500), 
     _led1(LED1), 
     _led2(LED2), 
@@ -52,14 +51,17 @@ void Robot::calibrationAlert(void)
 void Robot::calibrate(bool calib_imu, bool calib_servo)
 {
     calibrationAlert();
-    //if (calib_imu) {
-//        // Calibrate the robot's IMU
+    //if (calib_imu) 
+//    {
+//        //Calibrate the robot's IMU
 //        _imu.calibrate();
-//    }
-//    if (calib_servo) {
+//        printf("Calibrated the imu");
+//     }
+//    if (calib_servo) 
+//    {
 //        // Calibrate and initialize the servo
 //        _servo.calibrate(0.001, 90.0);
-//    }
+//      }
     setLEDs(0, 0, 0, 0);
 }
 
@@ -114,80 +116,95 @@ float Robot::range(void)
     return total;
 }
 
-///* Gets the white value of the left encoder. True = white; false = left. */
-//bool Robot::encoderLeft(void)
-//{
-//    bool to_return;
-//    Timer t;
-//    _encoder_left.output();
-//    _encoder_left = 1;
-//    wait_us(100);
-//    _encoder_left.input();
-//    t.start();
-//    while (_encoder_left = 1 && t.read_us() < 1000);
-//    t.stop();
-//    if (t.read_us() < 250) {
-//        to_return = true;
-//    }
-//    else {
-//        to_return = false;
-//    }
-//    return to_return;
-//}
-//
-///* Gets the white value of the right encoder. True = white; false = left. */
-//bool Robot::encoderRight(void)
-//{
-//    bool to_return;
-//    Timer t;
-//    _encoder_right.output();
-//    _encoder_right = 1;
-//    wait_us(100);
-//    _encoder_right.input();
-//    t.start();
-//    while (_encoder_right == 1 && t.read_us() < 1000);
-//    t.stop();
-//    if (t.read_us() < 300) {
-//        to_return = true;
-//    }
-//    else {
-//        to_return = false;
-//    }
-//    return to_return;
-//}
-
-/* Moves the robot forward the specified distance. */
-float Robot::forward(int dist)
+//Scan the area
+string Robot::servo_scan()
 {
-   _wheels.forward();
-   _encoder_left.forward(dist);
-   _wheels.brake();
-// Update the robot's x and y coordinates
-    _x += cos(_th) * dist;
-    _y += sin(_th) * dist;  
+    int direction,temp=0,temp_deg;
+    float deg = 90;
+    _servo.position(deg);
+    wait(1.0);
+    while (deg >= -90) 
+    {
+        _servo.position(deg);
+        //pc.printf("Current Position: %f  \n \r" , deg);
+        direction = range();
+        //comparing with the previous high value
+        if ( direction > temp)
+        {
+           temp = direction;
+           temp_deg=deg;
+        }
+        wait_ms(50);
+        deg -= 1.0;
+       
+    }
+    _servo.position(-2);
+     if ( temp_deg < 0 )
+        {
+            return "R";
+        }
+        else
+        {
+            return "L";
+        }
 }
 
-/* Moves the robot backward the specified distance. */
-float Robot::backward(int dist, float speed)
+
+/* Moves the robot forward the specified distance. */
+void Robot::forward(int dist, float speed)
 {
-    //return forward(dist, -speed);
+    
+   _botmotor.moveForward(speed);
+   _encoder_left.forward(dist);
+   _botmotor.stopBot();
+// Update the robot's x and y coordinates
+    _x += cos(_th) * dist;
+    _y += sin(_th) * dist; 
+    
+    //printf("new co ordinates: %f ,%f",_x,_y);
+}
+
+/* Moves the robot in 180 degrees */
+void Robot::TurnAround()
+{
+    _botmotor.turnLeft(0.1);
+    wait(4);
+}
+
+
+/* Moves the robot backward the specified distance. */
+void Robot::backward(int dist, float speed)
+{
+    return forward(dist,speed);
 }
 
 /*Moves the robot to right with particular speed */
-//void Robot::right(float speed)
-//{
-//    brain.right(speed);
-//    wait(0.5);
-//    brain.stop();
-//}
-//
-///*Moves the robot to left with particular speed */
-//void Robot::left(float speed)
-//{
-//    brain.left(speed);
-//    wait(0.5);
-//    brain.stop();
-//}
+void Robot::right(float speed)
+{
+    _botmotor.turnRight(speed);
+     wait(1);
+    _botmotor.stopBot();
+    // Update the robot's x and y coordinates
+    _x += cos(_th);
+    _y += sin(_th); 
+}
+
+/*Moves the robot to left with particular speed */
+void Robot::left(float speed)
+{
+    _botmotor.turnLeft(speed);
+    wait(1);
+    _botmotor.stopBot();
+    // Update the robot's x and y coordinates
+    _x += cos(_th);
+    _y += sin(_th); 
+}
+
+
+void Robot::brake()
+{
+    _botmotor.stopBot();
+}
 
 /* Takes a 180-degree laser scan. */
 DataSample Robot::scan(void)
@@ -197,12 +214,12 @@ DataSample Robot::scan(void)
     ds.y = _y;
     // Iterate through the 160-degree range of the servo one degree at a time, 
     // taking a laser scan at each degree
-    float deg = -80.0;
+    float deg = 43;
     // Set initial position and wait for the servo to reach that point
-    _servo.write(deg);
+    _servo.position(deg);
     wait(1.0);
     // Iterate through the servo's range and take a laser scan at each point
-    while (deg <= 80.0) {
+    while (deg <= -47) {
         // Position the servo and wait for it to reach that position
         _servo.position(deg);
         wait_ms(50);
@@ -214,11 +231,11 @@ DataSample Robot::scan(void)
         entry.second = range();
         ds.data.push_back(entry);
         // Increment the angle
-        deg += 1.0;
+        deg -= 1.0;
     }
     return ds;
 }
-
+ 
 //send the Current Co ordinates over ZigBee
 void Robot::sendData(void) 
 {
@@ -235,3 +252,5 @@ void Robot::setLEDs(bool l1, bool l2, bool l3, bool l4)
     _led3 = l3;
     _led4 = l4;
 }
+
+
