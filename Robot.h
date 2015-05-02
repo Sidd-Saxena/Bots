@@ -7,8 +7,10 @@
 #include "imu.h"
 #include "LidarLite.h"
 #include "XBee.h"
-#include "Wheels_519.h"
-
+#include "BotMotor.h"
+#include "Motor.h"
+#include "rtos.h"
+#include "string"
 // Data sample object for holding IR/servo scans
 struct DataSample
 {
@@ -31,25 +33,29 @@ public:
     float range(void);
     bool encoderLeft(void);
     bool encoderRight(void);
-    float forward(int);
-    float backward(int, float);
+    void forward(int,float);
+    void brake();
+    void backward(int, float);
     void right(float);
     void left(float);
     float turn(float, float);
+    string servo_scan();
     DataSample scan(void);
     void sendData(void);
+    void TurnAround();
     void setLEDs(bool, bool, bool, bool);
     // Xbee for communication
     XBee xbee;
+    float _x, _y, _th, _range;
     
 private:
     void calibrationAlert(void);
-    float _x, _y, _th, _range;
+    
     Encoder _encoder_left;
     Servo _servo;
     IMU _imu;
     LidarLite _lidar;
-    Wheels _wheels; 
+    BotMotor _botmotor; 
     DigitalOut _led1, _led2, _led3, _led4;
 };
 
