@@ -1,4 +1,7 @@
-
+/* ESE 519 Project : TURF
+Author : Siddharth Saxena, University of Pennsylvania
+This function is controlling the motors using digital out pins to H- Bridge and Pwm to control the speed of the bot
+It moved the bot forward, backward, left right and turn around */
 #include "BotMotor.h"
 
 BotMotor::BotMotor(PinName lmouta, PinName lmoutb, PinName lmoute, PinName rmouta, PinName rmoutb,PinName rmoute):left(lmouta, lmoutb, lmoute),right(rmouta, rmoutb, rmoute){
