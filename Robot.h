@@ -1,3 +1,8 @@
+/* ESE 519 : Final Project TURF
+Library for the brain of the bot, calls all the remaining functions and libraries
+Author :Siddharth Saxena, University of Pennsylvania*/
+
+
 #ifndef ROBOT_H
 #define ROBOT_H
 
