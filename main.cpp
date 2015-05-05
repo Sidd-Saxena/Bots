@@ -1,3 +1,8 @@
+/* ESE 519 : Final Project TURF
+demonstrates the main function to cntrol both the bots
+Author :Siddharth Saxena, University of Pennsylvania*/
+
+
 #include <sstream>
 #include "robot.h"
 
