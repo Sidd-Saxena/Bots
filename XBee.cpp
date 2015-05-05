@@ -1,4 +1,5 @@
-
+/* ESE 519 Project : TURF
+This function is used for sending data using serial communication on xbee */
  #include "XBee.h"
 
 
