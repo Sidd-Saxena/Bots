@@ -1,3 +1,8 @@
+/* ESE 519 : Final Project TURF
+This function is the brain of the bot. it calls all the remaining function and defines all the pins and creates objects. 
+Author :Siddharth Saxena, University of Pennsylvania*/
+
+
 #include "robot.h"
 
 // The distance in cm on one encoder click
